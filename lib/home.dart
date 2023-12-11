@@ -11,25 +11,35 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Align(
-              alignment: Alignment.centerLeft,
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () { Navigator.pushNamed(context, '/translateWindow'); },
+                  child: Icon(Icons.g_translate),
+                )),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.center,
               child: ElevatedButton(
-                onPressed: () { Navigator.pushNamed(context, '/translateWindow'); },
-                child: Text("Click 1"),
-              )),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ElevatedButton(
-              onPressed: () { Navigator.pushNamed(context, '/currencyConverterWindow'); },
-              child: Text("Click 2"),
+                onPressed: () { Navigator.pushNamed(context, '/currencyConverterWindow'); },
+                child: Icon(Icons.currency_exchange),
+              ),
             ),
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ElevatedButton(
-              onPressed: () { Navigator.pushNamed(context, '/QrCodeWindow'); },
-              child: Text("Click 3"),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () { Navigator.pushNamed(context, '/QrCodeWindow'); },
+                child: Icon(Icons.link_outlined),
+              ),
             ),
           ),
         ],

@@ -105,6 +105,3 @@ class _QrCodeWindow extends State<QrCodeWindow> {
         ));
   }
 }
-
-class SvgPicture {
-}
