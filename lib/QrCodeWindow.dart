@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -8,28 +10,36 @@ class QrCodeWindow extends StatefulWidget {
 }
 
 TextEditingController textController = TextEditingController();
-var img;
+
+var text;
+TextEditingController textCont = TextEditingController();
 
 class _QrCodeWindow extends State<QrCodeWindow> {
   Future<void> generateQrCode() async {
     const apiKey = '577c631e15mshfcb7e4eb9c36f21p1c6fd8jsn745500962210';
 
-    final url = Uri.parse('https://qrcode3.p.rapidapi.com/qrcode/text');
+    final url = Uri.parse('https://url-shortener-service.p.rapidapi.com/shorten');
 
     final headers = {
-      'Content-Type': 'application/json',
-      'x-rapidapi-host': 'qrcode3.p.rapidapi.com',
+      'content-type': 'application/x-www-form-urlencoded',
+      'x-rapidapi-host': 'url-shortener-service.p.rapidapi.com',
       'x-rapidapi-key': apiKey,
     };
 
-    var body = "{\"data\":\"1235434543\",\"style\":{\"module\":{\"color\":\"black\"}},\"size\":{\"width\":200},\"output\":{\"filename\":\"qrcode\",\"format\":\"svg\"}}";
+    final body = {
+      'url' : textController.text,
+    };
 
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
       setState(() {
-        img = response.body;
-        print(img);
+        final link = response.body;
+        Map map = json.decode(link);
+
+        print(map['result_url']);
+        text = map['result_url'];
+        textCont.text = text;
       });
     } else {
       print('Error: ${response.statusCode}');
@@ -47,13 +57,13 @@ class _QrCodeWindow extends State<QrCodeWindow> {
           title: Row(
             children: [
               Icon(
-                Icons.qr_code,
+                Icons.link,
                 color: Colors.white,
               ),
               Container(
                   padding: EdgeInsets.only(left: 5),
                   child: Text(
-                    "Генератор QR кода",
+                    "Сокращение ссылок ",
                     style: TextStyle(color: Colors.white),
                   )),
             ],
@@ -67,7 +77,7 @@ class _QrCodeWindow extends State<QrCodeWindow> {
                   keyboardType: TextInputType.number,
                   controller: textController,
                   decoration: InputDecoration(
-                      labelText: 'Введите текст',
+                      labelText: 'Введите ссылку',
                       labelStyle:
                           TextStyle(fontSize: 15, color: Colors.grey.shade400),
                       border: OutlineInputBorder(
@@ -75,6 +85,10 @@ class _QrCodeWindow extends State<QrCodeWindow> {
             ),
             Container(
               padding: EdgeInsets.only(left: 250, right: 250),
+              child: text == null ? Container() : TextField(
+                controller: textCont,
+                readOnly: true,
+              ),
             ),
             Container(
               padding: EdgeInsets.only(top: 25),
